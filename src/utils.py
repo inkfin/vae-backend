@@ -1,5 +1,9 @@
 import matplotlib.pyplot as plt
 from typing import Union
+import numpy as np
+import os
+import io
+from PIL import Image
 
 
 def sample_batch(dataset):
@@ -10,23 +14,57 @@ def sample_batch(dataset):
 
 
 def display(
-    images, n=10, size=(20, 3), cmap:Union[str,None] ="gray_r", as_type="float32", save_to=None
+    images: np.ndarray,
+    n=10,
+    merge=True,
+    size=(20, 3),
+    cmap: Union[str, None] = "gray_r",
+    as_type="float32",
+    save_to:Union[str, None]=None,
 ):
     """
     Displays n random images from each one of the supplied arrays.
     """
-    if images.max() > 1.0:
-        images = images / 255.0
-    elif images.min() < 0.0:
-        images = (images + 1.0) / 2.0
+    # if images.max() > 1.0:
+    #     images = images / 255.0
+    # elif images.min() < 0.0:
+    #     images = (images + 1.0) / 2.0
+    images = (images - images.min()) / (images.max() - images.min())
 
-    fig, axs = plt.subplots(1, n, figsize=size)
-    for i in range(n):
-        axs[i].imshow(images[i].astype(as_type), cmap=cmap)
-        axs[i].axis("off")
+    if merge:
+        fig, axs = plt.subplots(1, n, figsize=size)
+        for i in range(n):
+            axs[i].imshow(images[i].astype(as_type), cmap=cmap)
+            axs[i].axis("off")
 
-    if save_to:
-        fig.savefig(save_to)
-        print(f"\nSaved to {save_to}")
+        if save_to:
+            if os.path.isdir(save_to):
+                raise ValueError("save_to must be a file path, not a directory.")
+            if save_to == "buffer":
+                # Convert plot figure to numpy array
+                buf = io.BytesIO()
+                fig.savefig(buf, format='png')
+                buf.seek(0)
+                fig_array = np.array(Image.open(buf), dtype=as_type)
+
+                # Be sure to close the figure
+                plt.close(fig)
+
+                return fig_array
+            else:
+                fig.savefig(save_to)
+                print(f"\nSaved to {save_to}")
+        else:
+            plt.show(fig)
     else:
-        plt.show(fig)
+        for i in range(n):
+            plt.axis("off")
+            plt.imshow(images[i].astype(as_type), cmap=cmap)
+            if save_to:
+                if os.path.isfile(save_to):
+                    raise ValueError("save_to must be a directory, not a file path.")
+                plt.savefig(f"../output/gan_{i}.png")
+                plt.close()
+            else:
+                plt.show()
+
