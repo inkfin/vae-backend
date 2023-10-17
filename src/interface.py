@@ -155,7 +155,7 @@ def main():
                 imgui.image(fixed_textures[image2_idx], 64, 64)
 
                 imgui.text("Result:")
-                _, slider_idx = imgui.slider_int("integer slider", slider_idx, 0, 9)
+                _, slider_idx = imgui.slider_int("Morphing level", slider_idx, 0, 9)
                 imgui.image(result_textures[slider_idx], 64, 64)
 
             imgui.end()
@@ -184,7 +184,7 @@ def main():
 
 def impl_glfw_init():
     width, height = 1280, 720
-    window_name = "minimal ImGui/GLFW3 example"
+    window_name = "Project 1 demo (team 2)"
 
     if not glfw.init():
         print("Could not initialize OpenGL context")
