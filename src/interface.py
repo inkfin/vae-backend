@@ -155,7 +155,7 @@ def main():
                 imgui.image(fixed_textures[image2_idx], 64, 64)
 
                 imgui.text("Result:")
-                _, slider_idx = imgui.slider_int("integer slider", slider_idx, 0, 9)
+                _, slider_idx = imgui.slider_int("Morphing level", slider_idx, 0, 9)
                 imgui.image(result_textures[slider_idx], 64, 64)
 
             imgui.end()
