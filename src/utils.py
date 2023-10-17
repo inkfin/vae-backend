@@ -32,7 +32,7 @@ def display(
     images = (images - images.min()) / (images.max() - images.min())
 
     if merge:
-        fig, axs = plt.subplots(1, n, figsize=size)
+        fig, axs = plt.subplots(1, n, figsize=size, gridspec_kw={'wspace': 0})
         for i in range(n):
             axs[i].imshow(images[i].astype(as_type), cmap=cmap)
             axs[i].axis("off")
@@ -40,20 +40,8 @@ def display(
         if save_to:
             if os.path.isdir(save_to):
                 raise ValueError("save_to must be a file path, not a directory.")
-            if save_to == "buffer":
-                # Convert plot figure to numpy array
-                buf = io.BytesIO()
-                fig.savefig(buf, format='png')
-                buf.seek(0)
-                fig_array = np.array(Image.open(buf), dtype=as_type)
-
-                # Be sure to close the figure
-                plt.close(fig)
-
-                return fig_array
-            else:
-                fig.savefig(save_to)
-                print(f"\nSaved to {save_to}")
+            fig.savefig(save_to, bbox_inches="tight", pad_inches=0)
+            print(f"\nSaved to {save_to}")
         else:
             plt.show(fig)
     else:

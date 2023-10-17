@@ -93,8 +93,9 @@ def interp_vae(vae: VAE, image_list, n, idx1, idx2):
     interp_latent = np.array(interp_latent)
 
     rec = np.array(vae.decoder(interp_latent), dtype=np.float64)
-    # rec = (rec - rec.min()) / (rec.max() - rec.min())
+    display(rec, n, save_to="../output/interp_vae.png")
 
+    rec = (rec - rec.min()) / (rec.max() - rec.min())
     return rec
 
 

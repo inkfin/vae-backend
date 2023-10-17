@@ -62,10 +62,12 @@ def interp_gan(load_netG, fixed_noises, n, idx1, idx2):
         fake_list = load_netG(interp_array).detach().cpu()
 
     fixed_fake_array: np.ndarray = np.transpose(fake_list.numpy(), (0, 2, 3, 1))
+
+    display(fixed_fake_array, save_to="../output/interp_gan.png")
+
     fixed_fake_array = (fixed_fake_array - fixed_fake_array.min()) / (
         fixed_fake_array.max() - fixed_fake_array.min()
     )
-
     return fixed_fake_array
 
 if __name__ == "__main__":
